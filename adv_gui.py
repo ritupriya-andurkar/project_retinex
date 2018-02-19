@@ -10,8 +10,8 @@ import math
 
 text = " "
 class SysInfo:
-	
-	# function to view input image	
+
+	# function to view input image
 	def on_button_view_clicked(self,widget):
 		pixbuf = gtk.gdk.pixbuf_new_from_file(text)
 
@@ -27,7 +27,7 @@ class SysInfo:
 		global text
 		text = path
 		print text
-		
+
 		self.image.set_size_request(800,500)
 
 		pixbuf = gtk.gdk.pixbuf_new_from_file(path)
@@ -50,7 +50,7 @@ class SysInfo:
 		n = step(ie)
 		print("Step-Up Function Computed....")
 
-		e = exp_fun(n)
+		e = exp_fun(ie)
 		print("Exponential Function Computed....")
 
 		enhanced = joint(n,e,ie)
@@ -59,8 +59,8 @@ class SysInfo:
 
 		self.t1.set_text("Done")
 
-	
-	# function to display the image resulting from illumination estimation	
+
+	# function to display the image resulting from illumination estimation
 	def on_button_est_clicked(self,widget):
 
 		pixbuf = gtk.gdk.pixbuf_new_from_file("ie.jpg")
@@ -80,22 +80,8 @@ class SysInfo:
 		self.image.set_from_pixbuf(pixbuf)
 		self.image.show()
 
-	# function to display step-up function output
-	#def on_button_step_up_clicked(self,widget):
 
-	#	n = step(self.ie)
-	#	cv2.imwrite('n.jpg',n)
 
-	#	# set done message
-	#	self.t1.set_text("Done step-up function")
-
-	#	print(type(n))
-	#	pixbuf = gtk.gdk.pixbuf_new_from_file("n.jpg")
-
-	#	pixbuf = pixbuf.scale_simple(800,500,gtk.gdk.INTERP_BILINEAR)
-	#	self.image.set_from_pixbuf(pixbuf)
-	#	self.image.show()
-				
 	def on_button_joint_clicked(self,widgrt):
 		pixbuf = gtk.gdk.pixbuf_new_from_file("enhanced.jpeg")
 
@@ -110,13 +96,13 @@ class SysInfo:
 		self.window.set_border_width(5)
 		self.window.set_title("Image Enhancement System")
 
-		
+
 		self.main_hbox = gtk.HBox()
 		self.window.add(self.main_hbox)
 		self.button_vbox = gtk.VBox()
 		self.main_hbox.pack_start(self.button_vbox,expand=False)
 		self.sec_vbox = gtk.VBox()
-		
+
 
 		self.main_hbox.pack_start(self.sec_vbox,expand=True)
 
@@ -127,7 +113,7 @@ class SysInfo:
 
 		self.button_vbox.pack_start(self.t1,expand=False)
 
-		
+
 		button_view = gtk.Button("View input")
 		button_submit = gtk.Button("Submit input")
 		button_est = gtk.Button("Illumination est")
@@ -141,7 +127,7 @@ class SysInfo:
 		#self.button_vbox.pack_start(button_step_up,expand=False)
 		self.button_vbox.pack_start(button_joint,expand=False)
 
-		
+
 		button_submit.connect("clicked",self.on_button_submit_clicked)
 		button_est.connect("clicked",self.on_button_est_clicked)
 		button_guidance.connect("clicked",self.on_button_guidance_clicked)
@@ -150,12 +136,12 @@ class SysInfo:
 		button_joint.connect("clicked",self.on_button_joint_clicked)
 
 		self.scroll_win = gtk.ScrolledWindow()
-		
+
 
 		self.label = gtk.Label("IMAGE ENHANCEMENT SYSTEM")
 		self.label.set_size_request(50,100)
 
-		self.sec_vbox.pack_start(self.label,expand=False,fill=True)		
+		self.sec_vbox.pack_start(self.label,expand=False,fill=True)
 
 		self.sec_vbox.pack_start(self.scroll_win,expand=True,fill=True)
 		self.image = gtk.Image()
@@ -166,10 +152,10 @@ class SysInfo:
 
 		col = gtk.gdk.Color('#3b5998')
 		self.window.modify_bg(gtk.STATE_NORMAL,col)
-		
+
 		self.window.show_all()
 
-		
+
 
 # function to calculate illumination estimation (Using local Max-RGB algorithm)
 def filter(image):
@@ -179,7 +165,7 @@ def filter(image):
 
 	height = np.size(temp,0)
 	width = np.size(temp,1)
-	
+
 
 	ie = np.zeros( (height,width), dtype=np.int8)
 
@@ -194,7 +180,7 @@ def filter(image):
 				max_red = np.amax(roi[:,:,2])
 				est = max(max_blue,max_green,max_red)
 				ie[x,y] = est
-			
+
 			# Handling the pixel at upper boundary (where x = 0)
 			elif(x == 0):
 				roi = temp[0:1,y-1:y+1]
@@ -203,7 +189,7 @@ def filter(image):
 				max_red = np.amax(roi[:,:,2])
 				est = max(max_blue,max_green,max_red)
 				ie[x,y] = est
-			
+
 			# Handling the pixel at left boundary (where y = 0)
 			elif(y == 0):
 				roi = temp[x-1:x+1,0:1]
@@ -212,7 +198,7 @@ def filter(image):
 				max_red = np.amax(roi[:,:,2])
 				est = max(max_blue,max_green,max_red)
 				ie[x,y] = est
-				
+
 			# Handling the pixel at (height,width)
 			elif(x == height and y == width):
 				roi = temp[x-1:x,y-1:y]
@@ -239,9 +225,9 @@ def filter(image):
 				max_red = np.amax(roi[:,:,2])
 				est = max(max_blue,max_green,max_red)
 				ie[x,y] = est
-						
 
-			# Handling Non-boundary pixels		
+
+			# Handling Non-boundary pixels
 			else:
 				roi = temp[x-1:x+1,y-1:y+1]
 				max_blue = np.amax(roi[:,:,0])
@@ -249,8 +235,8 @@ def filter(image):
 				max_red = np.amax(roi[:,:,2])
 				est = max(max_blue,max_green,max_red)
 				ie[x,y] = est
-	
- 
+
+
 	return(ie)
 
 
@@ -286,48 +272,64 @@ def guidance(image):
 def step(ie):
 
 	temp = cv2.imread('fl.jpeg')
-	
+
 	print(type(ie))
 
 	L = cv2.imread('L.jpeg')
 
-	
+
 
 	height = np.size(temp,0)
 	width = np.size(temp,1)
 	channel = 3
 	n = np.zeros( (height,width,channel), dtype=np.int8)
 
-	for x in range(0,height):
-		for y in range(0,width):
 
-			# for blue channel
-			if(ie[x,y] - L[x,y,0] >= 0):
-				n[x,y,0] = 1
 
-			else:
-				n[x,y,0] = 0
+	for x in range(1,height-1):
+		for y in range(1,width-1):
 
-			# for Green Channel
-			if(ie[x,y] - L[x,y,1] >= 0):
-				n[x,y,1] = 1;
-			else:
-				n[x,y,1] = 0;
+			roi = ie[x-1:x+1,y-1:y+1]
+
+			# for blue Channel
+			for i in range(x-1,x+1):
+				for j in range(y-1,y+1):
+
+					if( (ie[i,j] - L[x,y,0]) >= 0):
+						n[i,j,0] = 1
+
+					else:
+						n[i,j,0] = 0
+
+
+                        # for Green Channel
+			for i in range(x-1,x+1):
+				for j in range(y-1,y+1):
+
+					if( (ie[i,j] - L[x,y,1]) >= 0):
+						n[i,j,1] = 1
+
+					else:
+						n[i,j,1] = 0
 
 			# for red Channel
-			if(ie[x,y] - L[x,y,2] >= 0):
-				n[x,y,2] = 1;
-			else:
-				n[x,y,2] = 0;
+			for i in range(x-1,x+1):
+                                for j in range(y-1,y+1):
+
+                                        if( (ie[i,j] - L[x,y,2]) >= 0):
+                                                n[i,j,2] = 1
+
+                                        else:
+                                                n[i,j,2] = 0
 
 
 	return n
 
 
 # Exponential range Function
-def exp_fun(n):
+def exp_fun(ie):
 
-	sigma = 1;
+	sigma = 80;
 
 	temp = cv2.imread('fl.jpeg')
 	height = np.size(temp,0)
@@ -335,29 +337,32 @@ def exp_fun(n):
 	channel = 3
 
 	e = np.zeros( (height,width,channel), dtype=np.int8)
+	L = cv2.imread('L.jpeg')
 
-	for x in range(0,height):
-		for y in range(0,width):
+	for x in range(1,height-1):
+		for y in range(1,width-1):
 
 
+			for i in range(x-1,x+1):
+				for j in range(y-1,y+1):
 
-			# For Blue Channel
-			res = float( (n[x,y,0]) / (2*(sigma*sigma)) )
-			res = -res
-			res = math.exp(res)
-			e[x,y,0] = res
+					# For Blue Channel
+					res = float( abs( (ie[i,j] - L[x,y,0]) ) / (2*(sigma*sigma)) )
+					res = -res
+					res = math.exp(res)
+					e[x,y,0] = res
 
-			# For Red Channel
-			res = float( (n[x,y,1]) / (2*(sigma*sigma)) )
-			res = -res
-			res = math.exp(res)
-			e[x,y,1] = res
+					# For Green Channel
+					res = float(abs( (ie[i,j] - L[x,y,1]) )/ (2*(sigma*sigma)) )
+					res = -res
+					res = math.exp(res)
+					e[x,y,1] = res
 
-			# For Green Channel
-			res = float( (n[x,y,2]) / (2*(sigma*sigma)) )
-			res = -res
-			res = math.exp(res)
-			e[x,y,2] = res
+					# For Red Channel
+					res = float(abs( (ie[i,j] - L[x,y,2]) ) / (2*(sigma*sigma)) )
+					res = -res
+					res = math.exp(res)
+					e[x,y,2] = res
 
 
 
@@ -375,6 +380,8 @@ def joint(n,e,ie):
 	sum_numr = np.zeros( (height,width,channel), dtype=np.int8)
 	sum_den = np.zeros( (height,width,channel), dtype=np.int8)
 	k = np.zeros( (height,width,channel), dtype=np.int8)
+
+
 
 	for i in range(0,height):
 		for j in range(0,width):
@@ -422,7 +429,7 @@ def joint(n,e,ie):
 				# For denominator
 				roi_d = den[0:1,0:1,2]
 				sum_den[x,y,2] = np.sum(roi_d)
-				
+
 			##### Handling the pixel at upper boundary (where x = 0)
 			elif(x == 0):
 				# .... For Blue Channel .... #
@@ -471,10 +478,9 @@ def joint(n,e,ie):
 				# For denominator
 				roi_d = den[x-1:x+1,0:1,1]
 				sum_den[x,y,1] = np.sum(roi_d)
-				
 
 
-				# .... For Red Channel .... #					
+				# .... For Red Channel .... #
 				# For numerator
 				roi_n = numr[x-1:x+1,0:1,2]
 				sum_numr[x,y,2] = np.sum(roi_n)
@@ -522,7 +528,7 @@ def joint(n,e,ie):
 
 				# For denominator
 				roi_d = den[x-1:x,y-1:y+1,0]
-				sum_den[x,y,0] = np.sum(roi_d)				
+				sum_den[x,y,0] = np.sum(roi_d)
 
 
 				# .... For Green Channel .... #
@@ -532,7 +538,7 @@ def joint(n,e,ie):
 
 				# For denominator
 				roi_d = den[x-1:x,y-1:y+1,1]
-				sum_den[x,y,1] = np.sum(roi_d)	
+				sum_den[x,y,1] = np.sum(roi_d)
 
 
 				# .... For Red Channel .... #
@@ -542,7 +548,7 @@ def joint(n,e,ie):
 
 				# For denominator
 				roi_d = den[x-1:x,y-1:y+1,2]
-				sum_den[x,y,2] = np.sum(roi_d)	
+				sum_den[x,y,2] = np.sum(roi_d)
 
 
 			# Handling Pixels at right Boundary (where x = width)
@@ -578,9 +584,9 @@ def joint(n,e,ie):
 
 
 			#### Handling Non-Boundary values ####
-			else:			
+			else:
 				### For blue Channel
-			
+
 				# for numerator
 				roi_n = numr[x-1:x+1,y-1:y+1,0]
 				sum_numr[x,y,0] = np.sum(roi_n)
@@ -608,13 +614,13 @@ def joint(n,e,ie):
 				# for denominator
 				roi_d = den[x-1:x+1,y-1:y+1,2]
 				sum_den[x,y,2] =  np.sum(roi_d)
-			
+
 
 	for i in range(0,height):
 		for j in range(0,width):
 
 			# No need to handle boundary pixels separately
-			
+
 			# For Blue Channel
 			k[x,y,0] = sum_numr[x,y,0] / sum_den[x,y,0]
 
